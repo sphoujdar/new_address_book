@@ -5,7 +5,7 @@
 			be used in this program?*/
 
 /*Query 3 - How to enter String arguments in console with spaces 
-			included? eg. "7 Suramya" as one address field.*/
+			included? eg. "7 Suramya" as one single field.*/
 
 
 package new_address_book;
@@ -25,15 +25,12 @@ public class AddressBookMain {
 		book1.displayBook(book1);
 		
 		
-		
-		
 		book1.modifyContact(sc, book1);
-		
-		
-		
-		
 		book1.displayBook(book1);
 		
+		
+		book1.deleteContact(sc, book1);
+		book1.displayBook(book1);
 		
 		
 	}

@@ -2,7 +2,7 @@ package new_address_book;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AddressBook {
+public class AddressBook  implements IAddressBook{
 	
 	String currentAddressBookName;
 	ArrayList<Contact> currentAddressBook = new ArrayList<Contact>();

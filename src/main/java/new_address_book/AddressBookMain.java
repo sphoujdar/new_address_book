@@ -19,7 +19,6 @@ public class AddressBookMain {
 		
 		Scanner sc = new Scanner(System.in);
 		
-		
 		AddressBook book1 = new AddressBook("Book1");
 		book1.addContact(sc);
 		book1.addContact(sc);

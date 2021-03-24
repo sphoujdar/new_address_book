@@ -15,32 +15,39 @@ import java.util.Scanner;
 public class AddressBookMain {
 
 	public static void main(String[] args) {
-		System.out.printf("Welcome to AddressBook Program.\n\n");
+		System.out.println("Welcome to AddressBook Program.");
 		
 		Scanner sc = new Scanner(System.in);
-		
-		AddressBook book1 = new AddressBook("Book1");
+
+		/*Various functionality available in program right now -
+		AddressBook book2 = new AddressBook("Book2"); i.e Managing multiple books
 		book1.addContact(sc);
-		book1.addContact(sc);
-		book1.displayBook(book1);
-		
 		book1.modifyContact(sc, book1);
 		book1.displayBook(book1);
-		
 		book1.deleteContact(sc, book1);
+		*/
+
+		Contact shubham1 = new Contact("Shubham","Phoujdar", "Kothrud", "Pune", "Maharashtra",
+				"sm.phoujdar@gmail.com", 411038, 8806615534L);
+		Contact manisha = new Contact("Manisha","Phoujdar", "Kothrud", "Pune", "Maharashtra",
+				"ms.phoujdar@gmail.com", 411038, 8806615535L);
+		Contact shivani = new Contact("Shivani","Phoujdar", "Kothrud", "Pune", "Maharashtra",
+				"ms.phoujdar@gmail.com", 411038, 8806615536L);
+		Contact shubham2 = new Contact("Shubham","Phoujdar", "Kothrud", "Pune", "Maharashtra",
+				"ms.phoujdar@gmail.com", 411038, 8806615537L);
+
+		AddressBook book1 = new AddressBook("Book1");
+		book1.currentAddressBook.add(shubham2);
+		book1.currentAddressBook.add(manisha);
+		book1.currentAddressBook.add(shivani);
+		book1.currentAddressBook.add(shubham1);
+		book1.currentAddressBook.add(shubham1);
+		book1.displayBook(book1);
+
+		book1.handleDuplicateContacts();
 		book1.displayBook(book1);
 		
-		
-		AddressBook book2 = new AddressBook("Book2");
-		book2.addContact(sc);
-		book2.addContact(sc);
-		book2.displayBook(book2);
-		
-		book2.modifyContact(sc, book2);
-		book2.displayBook(book2);
-		
-		book2.deleteContact(sc, book2);
-		book2.displayBook(book2);
+
 		
 		sc.close();
 		

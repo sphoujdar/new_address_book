@@ -5,8 +5,7 @@ public class Contact {
 	public String firstName, lastName, address, city, state, email;
 	public int zipCode; 
 	public long phoneNumber;
-	
-	
+
 	public Contact(String firstName, String lastName, String address, String city,
 				   String state, String email,
 				   int zipCode, long phoneNumber) 

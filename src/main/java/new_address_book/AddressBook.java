@@ -6,13 +6,15 @@ public class AddressBook  implements IAddressBook{
 	
 	String currentAddressBookName;
 	ArrayList<Contact> currentAddressBook = new ArrayList<>();
-	
-	
+
+	public ArrayList<Contact> getCurrentAddressBook() {
+		return currentAddressBook;
+	}
+
 	public AddressBook(String currentAddressBookName) {
 		super();
 		this.currentAddressBookName = currentAddressBookName;
 	}
-	
 
 	public void displayBook(AddressBook passedAddressBook) {
 		
@@ -51,9 +53,7 @@ public class AddressBook  implements IAddressBook{
 			}
 		}
 		this.currentAddressBook = contactListWithoutDuplicates;
-
 	}
-
 
 	public Contact createContact (Scanner sc) {
 		
@@ -79,7 +79,6 @@ public class AddressBook  implements IAddressBook{
 		
 	}
 	
-	
 	public void addContact (Scanner sc) {
 		
 		System.out.printf("You are in %s :\n",this.currentAddressBookName);
@@ -90,7 +89,6 @@ public class AddressBook  implements IAddressBook{
 		this.currentAddressBook.add(newContact);	
 		
 	}
-	
 	
 	public int findContact(Scanner sc) {
 		
@@ -116,12 +114,10 @@ public class AddressBook  implements IAddressBook{
 		}
 		
 		System.out.println("\nContact not in Address Book.\n");
-		System.out.println("\n\n----------------------------------------------------\n" +
-				"");
+		System.out.println("\n\n----------------------------------------------------\n");
 		
 		return -999;
 	}
-	
 	
 	public void modifyContact(Scanner sc, AddressBook book1) {
 		
@@ -139,7 +135,6 @@ public class AddressBook  implements IAddressBook{
 		}
 	}
 	
-	
 	public void deleteContact(Scanner sc, AddressBook book1) {
 		
 		System.out.printf("You are in %s :\n",this.currentAddressBookName);
@@ -152,7 +147,9 @@ public class AddressBook  implements IAddressBook{
 		}
 	}
 
+	public void searchContactByCityOrStateInMultipleAddressBook(Scanner Sc){
 
+	}
 	
 	
 }

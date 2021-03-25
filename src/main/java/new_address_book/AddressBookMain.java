@@ -15,6 +15,8 @@
 		book1.deleteContact(sc, book1);
 		book1.handleDuplicateContacts();
 		book1.displayBook(book1);
+		runnerObject.printContactByCityOrState(sc);
+		runnerObject.populateCityStateDictionaries();
 */
 
 
@@ -59,9 +61,7 @@ public class AddressBookMain {
 		book2.currentAddressBook.add(prince1);
 		book2.currentAddressBook.add(prince2);
 
-		//runnerObject.printContactByCityOrState(sc);
-
-		runnerObject.populateCityStateDictionaries();
+		runnerObject.countContactByCityAndState();
 
 		sc.close();
 	}
@@ -92,7 +92,6 @@ public class AddressBookMain {
 		}
 	}
 
-
 	public void printContactByCityOrState(Scanner sc) {
 		ArrayList<Contact> contactListByCityOrState = new ArrayList<>();
 		this.populateCityStateDictionaries();
@@ -107,7 +106,6 @@ public class AddressBookMain {
 		else
 			System.out.println("Enter State to search Contacts in:");
 		String cityOrState = sc.next();
-
 
 		for (AddressBook book : this.allAddressBooks) {
 			for (Contact currentContact : book.currentAddressBook) {
@@ -126,6 +124,36 @@ public class AddressBookMain {
 		for (Contact currentContact : contactListByCityOrState) {
 			currentContact.displayContact(currentContact);
 		}
+	}
+
+	public void countContactByCityAndState(){
+
+		HashMap<String, Integer> uniqueCityList = new HashMap<String, Integer>();
+		HashMap<String, Integer> uniqueStateList = new HashMap<String, Integer>();
+
+		for (AddressBook book : this.allAddressBooks) {
+			for (Contact currentContact : book.currentAddressBook) {
+				if (!uniqueCityList.containsKey(currentContact.city)) {
+					uniqueCityList.put(currentContact.city,1);
+					}
+				else{
+					uniqueCityList.put(currentContact.city, uniqueCityList.get(currentContact.city) + 1);
+				}
+			}
+		}
+		System.out.println("City Scores -\n" + uniqueCityList.toString());
+
+		for (AddressBook book : this.allAddressBooks) {
+			for (Contact currentContact : book.currentAddressBook) {
+				if (!uniqueStateList.containsKey(currentContact.state)) {
+					uniqueStateList.put(currentContact.state,1);
+				}
+				else{
+					uniqueStateList.put(currentContact.state, uniqueStateList.get(currentContact.state) + 1);
+				}
+			}
+		}
+		System.out.println("State Scores -\n" + uniqueStateList.toString());
 	}
 }
 

@@ -25,22 +25,24 @@ import java.util.*;
 public class AddressBookMain {
 
 	ArrayList<AddressBook> allAddressBooks = new ArrayList<>();
+	Map<String,Contact> contactByCity = new HashMap<>();
+	Map<String,Contact> contactByState = new HashMap<>();
 
 	public static void main(String[] args) {
 		System.out.println("Welcome to AddressBook Program.");
 		Scanner sc = new Scanner(System.in);
 
-		Contact shubham1 = new Contact("Shubham","Phoujdar", "Kothrud", "Mumbai", "Maharashtra",
+		Contact shubham1 = new Contact("Shubham", "Phoujdar", "Kothrud", "Mumbai", "Maharashtra",
 				"sm.phoujdar@gmail.com", 411038, 8806615534L);
-		Contact manisha = new Contact("Manisha","Phoujdar", "Kothrud", "Pune", "Maharashtra",
+		Contact manisha = new Contact("Manisha", "Phoujdar", "Kothrud", "Pune", "Maharashtra",
 				"ms.phoujdar@gmail.com", 411038, 8806615535L);
-		Contact shivani = new Contact("Shivani","Phoujdar", "Kothrud", "Pune", "Maharashtra",
+		Contact shivani = new Contact("Shivani", "Phoujdar", "Kothrud", "Pune", "Maharashtra",
 				"ms.phoujdar@gmail.com", 411038, 8806615536L);
-		Contact shubham2 = new Contact("Shubham","Phoujdar", "Kothrud", "Pune", "Maharashtra",
+		Contact shubham2 = new Contact("Shubham", "Phoujdar", "Kothrud", "Pune", "Maharashtra",
 				"ms.phoujdar@gmail.com", 411038, 8806615537L);
-		Contact prince1 = new Contact("Prince","Singh", "Andheri", "Mumbai", "Maharashtra",
+		Contact prince1 = new Contact("Prince", "Singh", "Andheri", "Mumbai", "Maharashtra",
 				"pm.singh@gmail.com", 400001, 8888855555L);
-		Contact prince2 = new Contact("Prince","Singh", "Kormangala", "Bangalore", "Karnataka",
+		Contact prince2 = new Contact("Prince", "Singh", "Kormangala", "Bangalore", "Karnataka",
 				"pb.singh@gmail.com", 800001, 8888844444L);
 
 		AddressBook book1 = new AddressBook("Book1");
@@ -57,17 +59,47 @@ public class AddressBookMain {
 		book2.currentAddressBook.add(prince1);
 		book2.currentAddressBook.add(prince2);
 
-		runnerObject.printContactByCityOrState(sc);
+		//runnerObject.printContactByCityOrState(sc);
+
+		runnerObject.populateCityStateDictionaries();
 
 		sc.close();
 	}
 
-	public void printContactByCityOrState(Scanner sc){
+	public void populateCityStateDictionaries(){
+		for (AddressBook book : this.allAddressBooks) {
+			for (Contact currentContact : book.currentAddressBook) {
+						this.contactByCity.put(currentContact.city,currentContact);
+			}
+		}
+
+		for (Map.Entry mapElement : contactByCity.entrySet()) {
+			String currentCity = mapElement.getKey().toString();
+			Contact currentContact = (Contact) mapElement.getValue();
+			System.out.printf("\nContact : %s %s  |  City : %s",currentContact.firstName,currentContact.lastName,currentCity );
+		}
+
+		for (AddressBook book : this.allAddressBooks) {
+			for (Contact currentContact : book.currentAddressBook) {
+				this.contactByState.put(currentContact.state,currentContact);
+			}
+		}
+
+		for (Map.Entry mapElement : contactByState.entrySet()) {
+			String currentState = mapElement.getKey().toString();
+			Contact currentContact = (Contact) mapElement.getValue();
+			System.out.printf("\nContact : %s %s  |  State : %s",currentContact.firstName,currentContact.lastName,currentState);
+		}
+	}
+
+
+	public void printContactByCityOrState(Scanner sc) {
 		ArrayList<Contact> contactListByCityOrState = new ArrayList<>();
+		this.populateCityStateDictionaries();
 		int choice;
-		do{
-		System.out.println("\nEnter Input : \n\n1. Search by City\n2. Search by State");
-		choice = sc.nextInt();
+		do {
+			System.out.println("\nEnter Input : \n\n1. Search by City\n2. Search by State");
+			choice = sc.nextInt();
 		} while (choice < 1 || choice > 2);
 
 		if (choice == 1)
@@ -76,16 +108,16 @@ public class AddressBookMain {
 			System.out.println("Enter State to search Contacts in:");
 		String cityOrState = sc.next();
 
+
 		for (AddressBook book : this.allAddressBooks) {
 			for (Contact currentContact : book.currentAddressBook) {
-				if (choice == 1){
-					if (currentContact.city.equals(cityOrState)){
+				if (choice == 1) {
+					if (currentContact.city.equals(cityOrState)) {
 						contactListByCityOrState.add(currentContact);
 					}
-				}
-				else{
-					if (currentContact.state.equals(cityOrState)){
-					contactListByCityOrState.add(currentContact);
+				} else {
+					if (currentContact.state.equals(cityOrState)) {
+						contactListByCityOrState.add(currentContact);
 					}
 				}
 			}

@@ -1,13 +1,16 @@
 package new_address_book;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class AddressBook  implements IAddressBook{
 	
 	String currentAddressBookName;
-	ArrayList<Contact> currentAddressBook = new ArrayList<>();
+	List<Contact> currentAddressBook = new ArrayList<>();
 
-	public ArrayList<Contact> getCurrentAddressBook() {
+	public List<Contact> getCurrentAddressBook() {
 		return currentAddressBook;
 	}
 
@@ -37,22 +40,18 @@ public class AddressBook  implements IAddressBook{
 	}
 
 	public void handleDuplicateContacts() {
-
 		int arraySize = this.currentAddressBook.size();
 		ArrayList<String> contactListNames = new ArrayList<>(arraySize);
-		ArrayList<Contact> contactListWithoutDuplicates = new ArrayList<>();
+		List<Contact> contactListWithoutDuplicates = new ArrayList<>();
 
-		for (Contact currentContact : this.currentAddressBook){
-			if(!contactListNames.contains(currentContact.firstName+currentContact.lastName)){
-				contactListWithoutDuplicates.add(currentContact);
-				contactListNames.add(currentContact.firstName+currentContact.lastName);
-			}else{
-				System.out.printf("This duplicate Contact found in %s.\n\n" , this.currentAddressBookName);
-				currentContact.displayContact(currentContact);
-				System.out.println("Removing this duplicate Entry.\n\n");
-			}
-		}
+		this.displayBook(this);
+		contactListWithoutDuplicates = this.currentAddressBook.stream()
+									   .peek(p -> System.out.println("Before distinct " + p.firstName+p.lastName))
+									   .distinct()
+									   .peek(p -> System.out.println("After distinct " + p.firstName+p.lastName))
+									   .collect(Collectors.toList());
 		this.currentAddressBook = contactListWithoutDuplicates;
+		this.displayBook(this);
 	}
 
 	public Contact createContact (Scanner sc) {

@@ -1,5 +1,6 @@
 package new_address_book;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Predicate;
@@ -19,24 +20,20 @@ public class AddressBook  implements IAddressBook{
 		this.currentAddressBookName = currentAddressBookName;
 	}
 
-	public void displayBook(AddressBook passedAddressBook) {
-		
-		System.out.printf("\n\nAddress Book Name is %s. \n\n", passedAddressBook.currentAddressBookName);
+	public void displayBook() {
+		System.out.printf("\n\nAddress Book Name is %s. \n\n", this.currentAddressBookName);
 		Contact blankContact = new Contact(null, null, null, null, null, null, 0, 0);
-		
 		System.out.println("\n\n----------------------------------------------------\n\n");
-		for (int i = 0 ; i<passedAddressBook.currentAddressBook.size(); i++) {
+		for (int i = 0 ; i<this.currentAddressBook.size(); i++) {
 			System.out.printf("Contact %d :\n",i+1);
 			
 			/*Query - How can I use the displayContact() function 
 			w/o having to make a blank object to access it?*/
 			
-			blankContact.displayContact(passedAddressBook.currentAddressBook.get(i));
+			blankContact.displayContact(this.currentAddressBook.get(i));
 			
 			System.out.println("\n\n----------------------------------------------------\n");
-			
 		}
-		
 	}
 
 	public void handleDuplicateContacts() {
@@ -44,14 +41,14 @@ public class AddressBook  implements IAddressBook{
 		ArrayList<String> contactListNames = new ArrayList<>(arraySize);
 		List<Contact> contactListWithoutDuplicates = new ArrayList<>();
 
-		this.displayBook(this);
+		System.out.println("***********************************Before Removing Duplicates***********************************");
+		this.displayBook();
 		contactListWithoutDuplicates = this.currentAddressBook.stream()
-									   .peek(p -> System.out.println("Before distinct " + p.firstName+p.lastName))
 									   .distinct()
-									   .peek(p -> System.out.println("After distinct " + p.firstName+p.lastName))
 									   .collect(Collectors.toList());
 		this.currentAddressBook = contactListWithoutDuplicates;
-		this.displayBook(this);
+		System.out.println("***********************************After Removing Duplicates***********************************");
+		this.displayBook();
 	}
 
 	public Contact createContact (Scanner sc) {
@@ -146,9 +143,19 @@ public class AddressBook  implements IAddressBook{
 		}
 	}
 
-	public void searchContactByCityOrStateInMultipleAddressBook(Scanner Sc){
-
+	public void sortAddressBookByContactName(){
+		Comparator<Contact> fullNameComparator = new Comparator<Contact>() {
+			@Override
+			public int compare(Contact contact, Contact t1) {
+				String contactFullName = contact.firstName+contact.lastName;
+				String t1FullName = t1.firstName+t1.lastName;
+				return contactFullName.compareTo(t1FullName);
+			}
+		};
+		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
+		sortedAddressBook = (ArrayList<Contact>) this.currentAddressBook.stream()
+																		.sorted(fullNameComparator)
+																		.collect(Collectors.toList());
+		this.currentAddressBook = sortedAddressBook;
 	}
-	
-	
 }

@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public interface IAddressBook{
 
-	void displayBook(AddressBook book1);
+	void displayBook();
 	void handleDuplicateContacts();
 	void addContact (Scanner sc);
 	void modifyContact (Scanner sc, AddressBook book1);

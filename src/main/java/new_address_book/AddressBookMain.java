@@ -1,19 +1,12 @@
 /*Query - How to enter String arguments in console with spaces
 		  included? eg. "7 Suramya" as one single field.
-
-**Various functionality available in program right now -
-		AddressBook book2 = new AddressBook("Book2"); i.e Managing multiple books
-		book1.addContact(sc);
-		book1.modifyContact(sc, book1);
-		book1.displayBook(book1);
-		book1.deleteContact(sc, book1);
-		book1.displayBook(book1);
-		runnerObject.printContactByCityOrState(sc);
-		runnerObject.countContactByCityAndState();
-		runnerObject.populateCityStateDictionaries();
-
 **Had to @Override equals() and hashCode() for the following to work with streams
 		book1.handleDuplicateContacts();
+
+		1. sortAddressBookByContactName, is use of streams really necessary?
+		2. populateCityStateDictionaries, is space complexity too large?
+		3. Compare override and comparator class usage for UC11 vs UC12
+		   implementation, is use of streams really necessary?
 */
 package new_address_book;
 import java.util.*;
@@ -26,7 +19,7 @@ public class AddressBookMain {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-
+		AddressBookMain runnerObject = new AddressBookMain();
 		Contact shubham1 = new Contact("Shubham", "Phoujdar", "Kothrud", "Mumbai",
 				"Maharashtra", "sm.phoujdar@gmail.com", 411038, 8806615534L);
 		Contact manisha = new Contact("Manisha", "Phoujdar", "Kothrud", "Pune",
@@ -64,33 +57,32 @@ public class AddressBookMain {
 		AddressBook book1 = new AddressBook("Book1");
 		AddressBook book2 = new AddressBook("Book2");
 		AddressBook book3 = new AddressBook("Book2");
-		AddressBookMain runnerObject = new AddressBookMain();
-
 		runnerObject.allAddressBooks.add(book1);
 		runnerObject.allAddressBooks.add(book2);
 		runnerObject.allAddressBooks.add(book3);
 		book1.currentAddressBook.add(shubham2);
+		book1.currentAddressBook.add(prince2);
 		book1.currentAddressBook.add(manisha);
 		book1.currentAddressBook.add(prince0);
 		book1.currentAddressBook.add(shivani);
+		book1.currentAddressBook.add(prince1);
 		book1.currentAddressBook.add(shubham1);
 		book1.currentAddressBook.add(prince2);
-		book1.currentAddressBook.add(prince1);
-		book1.currentAddressBook.add(prince2);
-		book2.currentAddressBook.add(satej0);
-		book2.currentAddressBook.add(aditya0);
-		book2.currentAddressBook.add(satej1);
-		book2.currentAddressBook.add(satej2);
-		book2.currentAddressBook.add(aditya1);
-		book2.currentAddressBook.add(aditya2);
-		book3.currentAddressBook.add(harsh0);
-		book3.currentAddressBook.add(harsh1);
-		book3.currentAddressBook.add(sagar0);
-		book3.currentAddressBook.add(sagar1);
+		book1.currentAddressBook.add(satej0);
+		book1.currentAddressBook.add(aditya0);
+		book1.currentAddressBook.add(satej1);
+		book1.currentAddressBook.add(satej2);
+		book1.currentAddressBook.add(aditya1);
+		book1.currentAddressBook.add(aditya2);
+		book1.currentAddressBook.add(harsh0);
+		book1.currentAddressBook.add(harsh1);
+		book1.currentAddressBook.add(sagar0);
+		book1.currentAddressBook.add(sagar1);
 
-		runnerObject.populateCityStateDictionaries();
-		runnerObject.displayCityDictionaries();
-		runnerObject.displayStateDictionaries();
+		book1.displayBook();
+		book1.sortAddressBookByContactName();
+		book1.displayBook();
+
 		sc.close();
 	}
 
@@ -102,6 +94,7 @@ public class AddressBookMain {
 						ArrayList<Contact> cityContacts;
 						if(!contactByCity.containsKey(contact.city)){
 							cityContacts = new ArrayList<Contact>();
+							System.out.println("hash Code" + cityContacts.hashCode());
 						}else{
 							cityContacts = contactByCity.get(contact.city);
 						}

@@ -158,4 +158,46 @@ public class AddressBook  implements IAddressBook{
 																		.collect(Collectors.toList());
 		this.currentAddressBook = sortedAddressBook;
 	}
+
+	public void sortAddressBookByContactCity(){
+		Comparator<Contact> cityComparator = new Comparator<Contact>() {
+			@Override
+			public int compare(Contact contact, Contact t1) {
+				return contact.city.compareTo(t1.city);
+			}
+		};
+		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
+		sortedAddressBook = (ArrayList<Contact>) this.currentAddressBook.stream()
+				.sorted(cityComparator)
+				.collect(Collectors.toList());
+		this.currentAddressBook = sortedAddressBook;
+	}
+
+	public void sortAddressBookByContactState(){
+		Comparator<Contact> stateComparator = new Comparator<Contact>() {
+			@Override
+			public int compare(Contact contact, Contact t1) {
+				return contact.state.compareTo(t1.state);
+			}
+		};
+		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
+		sortedAddressBook = (ArrayList<Contact>) this.currentAddressBook.stream()
+				.sorted(stateComparator)
+				.collect(Collectors.toList());
+		this.currentAddressBook = sortedAddressBook;
+	}
+
+	public void sortAddressBookByContactZipCode(){
+		Comparator<Contact> zipCodeComparator = new Comparator<Contact>() {
+			@Override
+			public int compare(Contact contact, Contact t1) {
+				return contact.zipCode- t1.zipCode;
+			}
+		};
+		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
+		sortedAddressBook = (ArrayList<Contact>) this.currentAddressBook.stream()
+				.sorted(zipCodeComparator)
+				.collect(Collectors.toList());
+		this.currentAddressBook = sortedAddressBook;
+	}
 }

@@ -1,12 +1,5 @@
 /*Query - How to enter String arguments in console with spaces
 		  included? eg. "7 Suramya" as one single field.
-**Had to @Override equals() and hashCode() for the following to work with streams
-		book1.handleDuplicateContacts();
-
-		1. sortAddressBookByContactName, is use of streams really necessary?
-		2. populateCityStateDictionaries, is space complexity too large?
-		3. Compare override and comparator class usage for UC11 vs UC12
-		   implementation, is use of streams really necessary?
 */
 package new_address_book;
 import java.util.*;
@@ -79,10 +72,6 @@ public class AddressBookMain {
 		book1.currentAddressBook.add(sagar0);
 		book1.currentAddressBook.add(sagar1);
 
-		book1.displayBook();
-		book1.sortAddressBookByContactName();
-		book1.displayBook();
-
 		sc.close();
 	}
 
@@ -93,7 +82,7 @@ public class AddressBookMain {
 				.forEach(contact -> {
 						ArrayList<Contact> cityContacts;
 						if(!contactByCity.containsKey(contact.city)){
-							cityContacts = new ArrayList<Contact>();
+							cityContacts = new ArrayList<>();
 							System.out.println("hash Code" + cityContacts.hashCode());
 						}else{
 							cityContacts = contactByCity.get(contact.city);
@@ -107,7 +96,7 @@ public class AddressBookMain {
 				.forEach(contact -> {
 							ArrayList<Contact> stateContacts;
 							if(!contactByState.containsKey(contact.state)){
-								stateContacts = new ArrayList<Contact>();
+								stateContacts = new ArrayList<>();
 							}else{
 								stateContacts = contactByState.get(contact.state);
 							}
@@ -136,7 +125,7 @@ public class AddressBookMain {
 	}
 
 	public void printContactByCityOrState(Scanner sc) {
-		ArrayList<Contact> contactListByCityOrState = new ArrayList<>();
+		ArrayList<Contact> contactListByCityOrState;
 		int choice;
 		do {
 			System.out.println("\nEnter Input : \n\n1. Search by City\n2. Search by State");
@@ -168,8 +157,8 @@ public class AddressBookMain {
 
 	public void countContactByCityAndState() {
 
-		HashMap<String, Integer> uniqueCityList = new HashMap<String, Integer>();
-		HashMap<String, Integer> uniqueStateList = new HashMap<String, Integer>();
+		HashMap<String, Integer> uniqueCityList = new HashMap<>();
+		HashMap<String, Integer> uniqueStateList = new HashMap<>();
 		allAddressBooks.stream()
 						.flatMap(addressBook -> addressBook.currentAddressBook.stream())
 						.forEach(contact -> {
@@ -194,4 +183,3 @@ public class AddressBookMain {
 		System.out.println("State Scores -\n" + uniqueStateList.toString());
 	}
 }
-

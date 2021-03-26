@@ -1,10 +1,7 @@
 package new_address_book;
-
-import java.util.Comparator;
 import java.util.Objects;
 
 public class Contact {
-	
 	public String firstName, lastName, address, city, state, email;
 	public int zipCode; 
 	public long phoneNumber;

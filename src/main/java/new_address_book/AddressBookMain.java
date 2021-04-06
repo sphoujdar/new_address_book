@@ -2,14 +2,176 @@
 		  included? eg. "7 Suramya" as one single field.
 */
 package new_address_book;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class AddressBookMain {
-	ArrayList<AddressBook> allAddressBooks = new ArrayList<>();
+	public ArrayList<AddressBook> allAddressBooks = new ArrayList<>();
 	Map<String, ArrayList<Contact>> contactByCity = new HashMap<>();
 	Map<String, ArrayList<Contact>> contactByState = new HashMap<>();
+	static Integer count = 0;
 
+	public static final File fileAsDatabase = new File("/home/phoujdar/eclipse-workspace/new_address_book/contactFile.txt");
+
+	public void displayStateDictionaries(){
+		for (String StateKey : contactByState.keySet()){
+			System.out.printf("Contacts in %s :\n",StateKey);
+			for (Contact currentContact : contactByState.get(StateKey)){
+				System.out.println(currentContact);
+			}
+		}
+	}
+
+	public void displayCityDictionaries(){
+		for (String CityKey : contactByCity.keySet()){
+			System.out.printf("Contacts in %s :\n",CityKey);
+			for (Contact currentContact : contactByCity.get(CityKey)){
+				System.out.println(currentContact);
+			}
+		}
+	}
+
+	public void printContactByCityOrState(Scanner sc) {
+		ArrayList<Contact> contactListByCityOrState;
+		int choice;
+		do {
+			System.out.println("\nEnter Input : \n\n1. Search by City\n2. Search by State");
+			choice = sc.nextInt();
+		} while (choice < 1 || choice > 2);
+
+		if (choice == 1)
+			System.out.println("Enter City to search Contacts in:");
+		else
+			System.out.println("Enter State to search Contacts in:");
+		String cityOrState = sc.next();
+
+		if (choice == 1){
+			contactListByCityOrState = (ArrayList<Contact>) allAddressBooks.stream()
+					.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+					.filter(contact -> contact.getCity().equals(cityOrState))
+					.collect(Collectors.toList());
+		}else{
+			contactListByCityOrState = (ArrayList<Contact>) allAddressBooks.stream()
+					.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+					.filter(contact -> contact.getState().equals(cityOrState))
+					.collect(Collectors.toList());
+		}
+
+		for (Contact currentContact : contactListByCityOrState) {
+			currentContact.displayContact(currentContact);
+		}
+	}
+
+	public void populateCityStateDictionaries(){
+		//Is the space complexity too large?
+		this.allAddressBooks.stream()
+				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+				.forEach(contact -> {
+							ArrayList<Contact> cityContacts;
+							if(!contactByCity.containsKey(contact.getCity())){
+								cityContacts = new ArrayList<>();
+								System.out.println("hash Code" + cityContacts.hashCode());
+							}else{
+								cityContacts = contactByCity.get(contact.getCity());
+							}
+							cityContacts.add(contact);
+							contactByCity.put(contact.getCity(), cityContacts);
+						}
+				);
+		this.allAddressBooks.stream()
+				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+				.forEach(contact -> {
+							ArrayList<Contact> stateContacts;
+							if(!contactByState.containsKey(contact.getState())){
+								stateContacts = new ArrayList<>();
+							}else{
+								stateContacts = contactByState.get(contact.getState());
+							}
+							stateContacts.add(contact);
+							contactByState.put(contact.getState(), stateContacts);
+						}
+				);
+	}
+
+	public void countContactByCityAndState() {
+
+		HashMap<String, Integer> uniqueCityList = new HashMap<>();
+		HashMap<String, Integer> uniqueStateList = new HashMap<>();
+		allAddressBooks.stream()
+				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+				.forEach(contact -> {
+							if (!uniqueStateList.containsKey(contact.getState())) {
+								uniqueStateList.put(contact.getState(), 1);
+							} else {
+								uniqueStateList.put(contact.getState(), uniqueStateList.get(contact.getState()) + 1);
+							}
+						}
+				);
+		allAddressBooks.stream()
+				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+				.forEach(contact -> {
+							if (!uniqueCityList.containsKey(contact.getCity())) {
+								uniqueCityList.put(contact.getCity(), 1);
+							} else {
+								uniqueCityList.put(contact.getCity(), uniqueCityList.get(contact.getCity()) + 1);
+							}
+						}
+				);
+		System.out.println("City Scores -\n" + uniqueCityList.toString());
+		System.out.println("State Scores -\n" + uniqueStateList.toString());
+	}
+
+	public void readAddressBooksFromFile(){
+		try(BufferedReader reader = new BufferedReader(new FileReader(AddressBookMain.fileAsDatabase))) {
+			Contact person;
+			AddressBook currentAddressBook;
+			while(reader.readLine() != null) {
+				person = new Contact();
+				String currentAddressBookName = reader.readLine();
+				if(this.allAddressBooks.size() == 0){
+					person.setFirstName(reader.readLine());
+					person.setLastName(reader.readLine());
+					person.setAddress(reader.readLine());
+					person.setCity(reader.readLine());
+					person.setState(reader.readLine());
+					person.setEmail(reader.readLine());
+					person.setZipCode(Integer.parseInt(reader.readLine()));
+					person.setPhoneNumber(Long.parseLong(reader.readLine()));
+					reader.readLine();
+					currentAddressBook = new AddressBook(currentAddressBookName);
+					currentAddressBook.currentAddressBook.add(person);
+					this.allAddressBooks.add(currentAddressBook);
+				}else{
+					for (AddressBook addressBookIterator: this.allAddressBooks) {
+						if(addressBookIterator.currentAddressBookName.equals(currentAddressBookName)){
+							currentAddressBook = addressBookIterator;
+							person.setFirstName(reader.readLine());
+							person.setLastName(reader.readLine());
+							person.setAddress(reader.readLine());
+							person.setCity(reader.readLine());
+							person.setState(reader.readLine());
+							person.setEmail(reader.readLine());
+							person.setZipCode(Integer.parseInt(reader.readLine()));
+							person.setPhoneNumber(Long.parseLong(reader.readLine()));
+							reader.readLine();
+							currentAddressBook.currentAddressBook.add(person);
+						}
+					}
+				}
+			}
+		}
+		catch ( IOException e) {
+			System.out.println(e);
+		}
+	}
+
+//Main
+
+/*
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		AddressBookMain runnerObject = new AddressBookMain();
@@ -53,133 +215,27 @@ public class AddressBookMain {
 		runnerObject.allAddressBooks.add(book1);
 		runnerObject.allAddressBooks.add(book2);
 		runnerObject.allAddressBooks.add(book3);
-		book1.currentAddressBook.add(shubham2);
-		book1.currentAddressBook.add(prince2);
-		book1.currentAddressBook.add(manisha);
-		book1.currentAddressBook.add(prince0);
-		book1.currentAddressBook.add(shivani);
-		book1.currentAddressBook.add(prince1);
-		book1.currentAddressBook.add(shubham1);
-		book1.currentAddressBook.add(prince2);
-		book1.currentAddressBook.add(satej0);
-		book1.currentAddressBook.add(aditya0);
-		book1.currentAddressBook.add(satej1);
-		book1.currentAddressBook.add(satej2);
-		book1.currentAddressBook.add(aditya1);
-		book1.currentAddressBook.add(aditya2);
-		book1.currentAddressBook.add(harsh0);
-		book1.currentAddressBook.add(harsh1);
-		book1.currentAddressBook.add(sagar0);
-		book1.currentAddressBook.add(sagar1);
+		book1.addContactByPassingContact(shubham2);
+		book1.addContactByPassingContact(prince2);
+		book1.addContactByPassingContact(manisha);
+		book1.addContactByPassingContact(prince0);
+		book1.addContactByPassingContact(shivani);
+		book1.addContactByPassingContact(prince1);
+		book1.addContactByPassingContact(shubham1);
+		book1.addContactByPassingContact(prince2);
+		book1.addContactByPassingContact(satej0);
+		book1.addContactByPassingContact(aditya0);
+		book1.addContactByPassingContact(satej1);
+		book1.addContactByPassingContact(satej2);
+		book1.addContactByPassingContact(aditya1);
+		book1.addContactByPassingContact(aditya2);
+		book1.addContactByPassingContact(harsh0);
+		book1.addContactByPassingContact(harsh1);
+		book1.addContactByPassingContact(sagar0);
+		book1.addContactByPassingContact(sagar1);
 
 		sc.close();
 	}
+*/
 
-	public void populateCityStateDictionaries(){
-		//Is the space complexity too large?
-		this.allAddressBooks.stream()
-				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
-				.forEach(contact -> {
-						ArrayList<Contact> cityContacts;
-						if(!contactByCity.containsKey(contact.city)){
-							cityContacts = new ArrayList<>();
-							System.out.println("hash Code" + cityContacts.hashCode());
-						}else{
-							cityContacts = contactByCity.get(contact.city);
-						}
-						cityContacts.add(contact);
-						contactByCity.put(contact.city, cityContacts);
-						}
-				);
-		this.allAddressBooks.stream()
-				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
-				.forEach(contact -> {
-							ArrayList<Contact> stateContacts;
-							if(!contactByState.containsKey(contact.state)){
-								stateContacts = new ArrayList<>();
-							}else{
-								stateContacts = contactByState.get(contact.state);
-							}
-							stateContacts.add(contact);
-							contactByState.put(contact.state, stateContacts);
-						}
-				);
-	}
-
-	public void displayStateDictionaries(){
-		for (String StateKey : contactByState.keySet()){
-			System.out.printf("Contacts in %s :\n",StateKey);
-			for (Contact currentContact : contactByState.get(StateKey)){
-				System.out.println(currentContact);
-			}
-		}
-	}
-
-	public void displayCityDictionaries(){
-		for (String CityKey : contactByCity.keySet()){
-			System.out.printf("Contacts in %s :\n",CityKey);
-			for (Contact currentContact : contactByCity.get(CityKey)){
-				System.out.println(currentContact);
-			}
-		}
-	}
-
-	public void printContactByCityOrState(Scanner sc) {
-		ArrayList<Contact> contactListByCityOrState;
-		int choice;
-		do {
-			System.out.println("\nEnter Input : \n\n1. Search by City\n2. Search by State");
-			choice = sc.nextInt();
-		} while (choice < 1 || choice > 2);
-
-		if (choice == 1)
-			System.out.println("Enter City to search Contacts in:");
-		else
-			System.out.println("Enter State to search Contacts in:");
-		String cityOrState = sc.next();
-
-		if (choice == 1){
-			contactListByCityOrState = (ArrayList<Contact>) allAddressBooks.stream()
-					.flatMap(addressBook -> addressBook.currentAddressBook.stream())
-					.filter(contact -> contact.city.equals(cityOrState))
-					.collect(Collectors.toList());
-		}else{
-			contactListByCityOrState = (ArrayList<Contact>) allAddressBooks.stream()
-					.flatMap(addressBook -> addressBook.currentAddressBook.stream())
-					.filter(contact -> contact.state.equals(cityOrState))
-					.collect(Collectors.toList());
-		}
-
-		for (Contact currentContact : contactListByCityOrState) {
-			currentContact.displayContact(currentContact);
-		}
-	}
-
-	public void countContactByCityAndState() {
-
-		HashMap<String, Integer> uniqueCityList = new HashMap<>();
-		HashMap<String, Integer> uniqueStateList = new HashMap<>();
-		allAddressBooks.stream()
-						.flatMap(addressBook -> addressBook.currentAddressBook.stream())
-						.forEach(contact -> {
-											if (!uniqueStateList.containsKey(contact.state)) {
-												uniqueStateList.put(contact.state, 1);
-											} else {
-												uniqueStateList.put(contact.state, uniqueStateList.get(contact.state) + 1);
-											}
-						}
-						);
-		allAddressBooks.stream()
-						.flatMap(addressBook -> addressBook.currentAddressBook.stream())
-						.forEach(contact -> {
-											if (!uniqueCityList.containsKey(contact.city)) {
-												uniqueCityList.put(contact.city, 1);
-											} else {
-												uniqueCityList.put(contact.city, uniqueCityList.get(contact.city) + 1);
-											}
-						}
-						);
-		System.out.println("City Scores -\n" + uniqueCityList.toString());
-		System.out.println("State Scores -\n" + uniqueStateList.toString());
-	}
 }

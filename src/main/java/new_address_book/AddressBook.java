@@ -1,23 +1,25 @@
 package new_address_book;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AddressBook  implements IAddressBook{
 	
 	String currentAddressBookName;
-	List<Contact> currentAddressBook = new ArrayList<>();
+	public List<Contact> currentAddressBook = new ArrayList<>();
 
-	public List<Contact> getCurrentAddressBook() {
-		return currentAddressBook;
+	public AddressBook() {
 	}
-
 	public AddressBook(String currentAddressBookName) {
 		super();
 		this.currentAddressBookName = currentAddressBookName;
+	}
+
+	public List<Contact> getCurrentAddressBook() {
+		return currentAddressBook;
 	}
 
 	public void displayBook() {
@@ -26,14 +28,13 @@ public class AddressBook  implements IAddressBook{
 		System.out.println("\n\n----------------------------------------------------\n\n");
 		for (int i = 0 ; i<this.currentAddressBook.size(); i++) {
 			System.out.printf("Contact %d :\n",i+1);
-			
-			/*Query - How can I use the displayContact() function 
-			w/o having to make a blank object to access it?*/
-			
 			blankContact.displayContact(this.currentAddressBook.get(i));
-			
 			System.out.println("\n\n----------------------------------------------------\n");
 		}
+	}
+
+	public int countContactsInBook() {
+		return this.currentAddressBook.size();
 	}
 
 	public void handleDuplicateContacts() {
@@ -50,9 +51,22 @@ public class AddressBook  implements IAddressBook{
 		System.out.println("***********************************After Removing Duplicates***********************************");
 		this.displayBook();
 	}
+	
+	public void addContactByUserInput(Scanner sc) {
+		System.out.printf("You are in %s :\n",this.currentAddressBookName);
+		System.out.println("Enter Details of the new Contact you want to add - ");
+		Contact newContact = createContact(sc);
+		this.currentAddressBook.add(newContact);
+		addToFile(newContact);
+	}
+
+	public void addContactByPassingContact(Contact contactToAdd) {
+		this.currentAddressBook.add(contactToAdd);
+		addToFile(contactToAdd);
+	}
 
 	public Contact createContact (Scanner sc) {
-		
+
 		System.out.println("Please Enter First Name");
 		String firstName = sc.next();
 		System.out.println("Please Enter Last Name");
@@ -71,19 +85,8 @@ public class AddressBook  implements IAddressBook{
 		String emailAddress = sc.next();
 
 		return new Contact(firstName,lastName, address, city, state,
-											 emailAddress, zipCode, phoneNumber);
-		
-	}
-	
-	public void addContact (Scanner sc) {
-		
-		System.out.printf("You are in %s :\n",this.currentAddressBookName);
-		System.out.println("Enter Details of the new Contact you want to add -");
-		
-		Contact newContact = createContact(sc);
-		
-		this.currentAddressBook.add(newContact);	
-		
+				emailAddress, zipCode, phoneNumber);
+
 	}
 	
 	public int findContact(Scanner sc) {
@@ -98,8 +101,8 @@ public class AddressBook  implements IAddressBook{
 		
 		for (int i = 0 ; i<currentAddressBook.size(); i++) {
 			
-			if(currentAddressBook.get(i).firstName.equals(fName)
-			   && currentAddressBook.get(i).lastName.equals(lName)) {
+			if(currentAddressBook.get(i).getFirstName().equals(fName)
+			   && currentAddressBook.get(i).getLastName().equals(lName)) {
 				
 				System.out.printf("\nContact is at [%d] position in %s.\n", 
 						          i+1, this.currentAddressBookName);
@@ -147,8 +150,8 @@ public class AddressBook  implements IAddressBook{
 		Comparator<Contact> fullNameComparator = new Comparator<Contact>() {
 			@Override
 			public int compare(Contact contact, Contact t1) {
-				String contactFullName = contact.firstName+contact.lastName;
-				String t1FullName = t1.firstName+t1.lastName;
+				String contactFullName = contact.getFirstName()+contact.getLastName();
+				String t1FullName = t1.getFirstName()+t1.getLastName();
 				return contactFullName.compareTo(t1FullName);
 			}
 		};
@@ -163,7 +166,7 @@ public class AddressBook  implements IAddressBook{
 		Comparator<Contact> cityComparator = new Comparator<Contact>() {
 			@Override
 			public int compare(Contact contact, Contact t1) {
-				return contact.city.compareTo(t1.city);
+				return contact.getCity().compareTo(t1.getCity());
 			}
 		};
 		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
@@ -177,7 +180,7 @@ public class AddressBook  implements IAddressBook{
 		Comparator<Contact> stateComparator = new Comparator<Contact>() {
 			@Override
 			public int compare(Contact contact, Contact t1) {
-				return contact.state.compareTo(t1.state);
+				return contact.getState().compareTo(t1.getState());
 			}
 		};
 		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
@@ -191,7 +194,7 @@ public class AddressBook  implements IAddressBook{
 		Comparator<Contact> zipCodeComparator = new Comparator<Contact>() {
 			@Override
 			public int compare(Contact contact, Contact t1) {
-				return contact.zipCode- t1.zipCode;
+				return contact.getZipCode()- t1.getZipCode();
 			}
 		};
 		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
@@ -200,4 +203,23 @@ public class AddressBook  implements IAddressBook{
 				.collect(Collectors.toList());
 		this.currentAddressBook = sortedAddressBook;
 	}
+
+	private void addToFile(Contact person) {
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(AddressBookMain.fileAsDatabase , true))) {
+			writer.write("+++++\n" +
+					this.currentAddressBookName + "\n"
+					+ person.getFirstName() + "\n"
+					+ person.getLastName() + "\n"
+					+ person.getAddress() + "\n"
+					+ person.getCity() + "\n"
+					+ person.getState() + "\n"
+					+ person.getEmail() + "\n"
+					+ person.getZipCode() + "\n"
+					+ person.getPhoneNumber() + "\n"
+					+ "-----\n");
+		} catch(IOException e) {
+			System.out.println(e);
+		}
+	}
+
 }

@@ -11,11 +11,20 @@ public class AddressBookTestFileIO {
     @Before
     public void setup(){
         runnerObject = new AddressBookMain();
-        runnerObject.readAddressBooksFromFile();
+        runnerObject.readAddressBooksFromTxtFile();
     }
     
     @Test
-    public void given3Contacts_WriteThemToFile_ReturnTrueIfCorrectlyRetrieved(){
+    public void givenContacts_WriteThemToTxtFile_ReturnTrueIfCorrectlyRetrieved(){
+        int countOfContacts = 0;
+        for (AddressBook currentAddressBook : runnerObject.allAddressBooks){
+            countOfContacts = currentAddressBook.countContactsInBook();
+        }
+        Assert.assertEquals(18, countOfContacts);
+    }
+
+    @Test
+    public void givenContacts_WriteThemToCsvFile_ReturnTrueIfCorrectlyRetrieved(){
         int countOfContacts = 0;
         for (AddressBook currentAddressBook : runnerObject.allAddressBooks){
             countOfContacts = currentAddressBook.countContactsInBook();
@@ -24,8 +33,8 @@ public class AddressBookTestFileIO {
     }
 }
 
-
-//    Contact shubham1 = new Contact("Shubham", "Phoujdar", "Kothrud", "Mumbai",
+//        Commented Code as it is may be needed later to add new contacts
+//        Contact shubham1 = new Contact("Shubham", "Phoujdar", "Kothrud", "Mumbai",
 //                "Maharashtra", "sm.phoujdar@gmail.com", 411038, 8806615534L);
 //        Contact manisha = new Contact("Manisha", "Phoujdar", "Kothrud", "Pune",
 //                "Maharashtra", "ms.phoujdar@gmail.com", 411038, 8806615535L);

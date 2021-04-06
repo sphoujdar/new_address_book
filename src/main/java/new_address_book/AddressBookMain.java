@@ -15,7 +15,7 @@ public class AddressBookMain {
 	Map<String, ArrayList<Contact>> contactByState = new HashMap<>();
 	static Integer count = 0;
 
-	public static final File fileAsDatabase = new File("/home/phoujdar/eclipse-workspace/new_address_book/contactFile.txt");
+	public static final File fileAsDatabase = new File("/home/phoujdar/eclipse-workspace/new_address_book/src/test/resources/contactFile.txt");
 
 	public void displayStateDictionaries(){
 		for (String StateKey : contactByState.keySet()){
@@ -125,7 +125,7 @@ public class AddressBookMain {
 		System.out.println("State Scores -\n" + uniqueStateList.toString());
 	}
 
-	public void readAddressBooksFromFile(){
+	public void readAddressBooksFromTxtFile(){
 		try(BufferedReader reader = new BufferedReader(new FileReader(AddressBookMain.fileAsDatabase))) {
 			Contact person;
 			AddressBook currentAddressBook;

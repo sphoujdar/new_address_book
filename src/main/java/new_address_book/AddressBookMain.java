@@ -51,12 +51,12 @@ public class AddressBookMain {
 
 		if (choice == 1){
 			contactListByCityOrState = (ArrayList<Contact>) allAddressBooks.stream()
-					.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+					.flatMap(addressBook -> addressBook.arrayListOfContacts.stream())
 					.filter(contact -> contact.getCity().equals(cityOrState))
 					.collect(Collectors.toList());
 		}else{
 			contactListByCityOrState = (ArrayList<Contact>) allAddressBooks.stream()
-					.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+					.flatMap(addressBook -> addressBook.arrayListOfContacts.stream())
 					.filter(contact -> contact.getState().equals(cityOrState))
 					.collect(Collectors.toList());
 		}
@@ -69,7 +69,7 @@ public class AddressBookMain {
 	public void populateCityStateDictionaries(){
 		//Is the space complexity too large?
 		this.allAddressBooks.stream()
-				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+				.flatMap(addressBook -> addressBook.arrayListOfContacts.stream())
 				.forEach(contact -> {
 							ArrayList<Contact> cityContacts;
 							if(!contactByCity.containsKey(contact.getCity())){
@@ -83,7 +83,7 @@ public class AddressBookMain {
 						}
 				);
 		this.allAddressBooks.stream()
-				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+				.flatMap(addressBook -> addressBook.arrayListOfContacts.stream())
 				.forEach(contact -> {
 							ArrayList<Contact> stateContacts;
 							if(!contactByState.containsKey(contact.getState())){
@@ -102,7 +102,7 @@ public class AddressBookMain {
 		HashMap<String, Integer> uniqueCityList = new HashMap<>();
 		HashMap<String, Integer> uniqueStateList = new HashMap<>();
 		allAddressBooks.stream()
-				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+				.flatMap(addressBook -> addressBook.arrayListOfContacts.stream())
 				.forEach(contact -> {
 							if (!uniqueStateList.containsKey(contact.getState())) {
 								uniqueStateList.put(contact.getState(), 1);
@@ -112,7 +112,7 @@ public class AddressBookMain {
 						}
 				);
 		allAddressBooks.stream()
-				.flatMap(addressBook -> addressBook.currentAddressBook.stream())
+				.flatMap(addressBook -> addressBook.arrayListOfContacts.stream())
 				.forEach(contact -> {
 							if (!uniqueCityList.containsKey(contact.getCity())) {
 								uniqueCityList.put(contact.getCity(), 1);
@@ -143,7 +143,7 @@ public class AddressBookMain {
 					person.setPhoneNumber(Long.parseLong(reader.readLine()));
 					reader.readLine();
 					currentAddressBook = new AddressBook(currentAddressBookName);
-					currentAddressBook.currentAddressBook.add(person);
+					currentAddressBook.arrayListOfContacts.add(person);
 					this.allAddressBooks.add(currentAddressBook);
 				}else{
 					for (AddressBook addressBookIterator: this.allAddressBooks) {
@@ -158,7 +158,7 @@ public class AddressBookMain {
 							person.setZipCode(Integer.parseInt(reader.readLine()));
 							person.setPhoneNumber(Long.parseLong(reader.readLine()));
 							reader.readLine();
-							currentAddressBook.currentAddressBook.add(person);
+							currentAddressBook.arrayListOfContacts.add(person);
 						}
 					}
 				}

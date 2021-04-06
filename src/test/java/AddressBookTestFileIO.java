@@ -1,22 +1,28 @@
 import new_address_book.AddressBook;
+import new_address_book.AddressBookCsv;
 import new_address_book.AddressBookMain;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class AddressBookTestFileIO {
 
     AddressBookMain runnerObject;
+    AddressBookCsv csvRunnerObject;
 
     @Before
     public void setup(){
         runnerObject = new AddressBookMain();
-        runnerObject.readAddressBooksFromTxtFile();
     }
     
     @Test
     public void givenContacts_WriteThemToTxtFile_ReturnTrueIfCorrectlyRetrieved(){
         int countOfContacts = 0;
+        runnerObject.readAddressBooksFromTxtFile();
         for (AddressBook currentAddressBook : runnerObject.allAddressBooks){
             countOfContacts = currentAddressBook.countContactsInBook();
         }
@@ -24,14 +30,53 @@ public class AddressBookTestFileIO {
     }
 
     @Test
-    public void givenContacts_WriteThemToCsvFile_ReturnTrueIfCorrectlyRetrieved(){
+    public void givenContactsInCsvFile_ReadThemFromFile_ReturnTrueIfCorrectlyRetrieved() throws IOException {
         int countOfContacts = 0;
+        csvRunnerObject = new AddressBookCsv();
+        csvRunnerObject.readAddressBooksFromCsv(runnerObject);
         for (AddressBook currentAddressBook : runnerObject.allAddressBooks){
             countOfContacts = currentAddressBook.countContactsInBook();
         }
         Assert.assertEquals(18, countOfContacts);
     }
+
+    @Test
+    public void givenContacts_WriteThemToCsvFile_ReturnTrueIfCorrectlyRetrieved() throws IOException {
+        FileWriter fw = new FileWriter(AddressBookCsv.fileName, false);
+        PrintWriter printWriter = new PrintWriter(fw, false);
+        printWriter.flush();
+        printWriter.close();
+        fw.close();
+        int countOfContacts = 0;
+        csvRunnerObject = new AddressBookCsv();
+        runnerObject.readAddressBooksFromTxtFile();
+        for (AddressBook currentAddressBook : runnerObject.allAddressBooks){
+            countOfContacts = currentAddressBook.countContactsInBook();
+        }
+        csvRunnerObject.writeAddressBooksToCsv(runnerObject);
+        Assert.assertEquals(18, countOfContacts);
+    }
 }
+
+//ADDRESS,CITY,EMAIL,FIRSTNAME,LASTNAME,PHONENUMBER,STATE,ZIPCODE
+//        Paris Suburb,Paris,srpa.apshankar@gmail.com,Sagar,Apshankar,7508844433,France,778009
+//        Kothrud,Pune,ms.phoujdar@gmail.com,Shubham,Phoujdar,8806615537,Maharashtra,411038
+//        Kormangala,Bangalore,pb.singh@gmail.com,Prince,Singh,8888844444,Karnataka,800001
+//        Kothrud,Pune,ms.phoujdar@gmail.com,Manisha,Phoujdar,8806615535,Maharashtra,411038
+//        Vadgaon,Pune,pm.singh@gmail.com,Prince,Singh,8888855555,Maharashtra,400001
+//        Kothrud,Pune,ms.phoujdar@gmail.com,Shivani,Phoujdar,8806615536,Maharashtra,411038
+//        Andheri,Mumbai,pm.singh@gmail.com,Prince,Singh,8888855555,Maharashtra,400001
+//        Kothrud,Mumbai,sm.phoujdar@gmail.com,Shubham,Phoujdar,8806615534,Maharashtra,411038
+//        Kormangala,Bangalore,pb.singh@gmail.com,Prince,Singh,8888844444,Karnataka,800001
+//        Mayur Colony,Pune,st.joshi@gmail.com,Satej,Joshi,8888844433,Maharashtra,440001
+//        Karishma,Pune,st.Hardikar@gmail.com,Aditya,Hardikar,8288844433,Maharashtra,440001
+//        Powai,Mumbai,st.joshi@gmail.com,Satej,Joshi,8888844433,Maharashtra,440001
+//        College,Boston,st1.joshi@gmail.com,Satej,Joshi,1008844433,California,110110
+//        IISC,Bangalore,st.Hardikar@gmail.com,Aditya,Hardikar,8288844433,Karnataka,440001
+//        NYU,New York,st1.Hardikar@gmail.com,Aditya,Hardikar,1208844433,New York State,110110
+//        Job,Pune,hp.phoujdar@gmail.com,Harsh,Phoujdar,3238844433,Maharashtra,330450
+//        Job,Dublin,hp.phoujdar@gmail.com,Harsh,Phoujdar,3238844433,South Ireland,330450
+//        Aundh,Pune,srpu.apshankar@gmail.com,Sagar,Apshankar,9658844433,Maharashtra,411038
 
 //        Commented Code as it is may be needed later to add new contacts
 //        Contact shubham1 = new Contact("Shubham", "Phoujdar", "Kothrud", "Mumbai",

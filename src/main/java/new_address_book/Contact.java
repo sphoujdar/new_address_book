@@ -1,9 +1,33 @@
 package new_address_book;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
+
+import javax.swing.text.Position;
 import java.util.Objects;
 
 public class Contact {
-	private String firstName, lastName, address, city, state, email;
+	@CsvBindByName
+	private String firstName;
+
+	@CsvBindByName
+	private String lastName;
+
+	@CsvBindByName
+	private String address;
+
+	@CsvBindByName
+	private String city;
+
+	@CsvBindByName
+	private String state;
+
+	@CsvBindByName
+	private String email;
+
+	@CsvBindByName
 	private int zipCode;
+
+	@CsvBindByName
 	private long phoneNumber;
 
 	public Contact() {
@@ -22,6 +46,7 @@ public class Contact {
 		this.zipCode = zipCode;
 		this.phoneNumber = phoneNumber;
 	}
+
 	public void displayContact(Contact passedContact) {
 		System.out.printf("First Name : %s\n",passedContact.firstName);
 		System.out.printf("Last Name : %s\n",passedContact.lastName);

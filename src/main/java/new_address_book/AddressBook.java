@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class AddressBook  implements IAddressBook{
 	
 	String currentAddressBookName;
-	public List<Contact> currentAddressBook = new ArrayList<>();
+	public List<Contact> arrayListOfContacts = new ArrayList<>();
 
 	public AddressBook() {
 	}
@@ -18,36 +18,36 @@ public class AddressBook  implements IAddressBook{
 		this.currentAddressBookName = currentAddressBookName;
 	}
 
-	public List<Contact> getCurrentAddressBook() {
-		return currentAddressBook;
+	public List<Contact> getArrayListOfContacts() {
+		return arrayListOfContacts;
 	}
 
 	public void displayBook() {
 		System.out.printf("\n\nAddress Book Name is %s. \n\n", this.currentAddressBookName);
 		Contact blankContact = new Contact(null, null, null, null, null, null, 0, 0);
 		System.out.println("\n\n----------------------------------------------------\n\n");
-		for (int i = 0 ; i<this.currentAddressBook.size(); i++) {
+		for (int i = 0; i<this.arrayListOfContacts.size(); i++) {
 			System.out.printf("Contact %d :\n",i+1);
-			blankContact.displayContact(this.currentAddressBook.get(i));
+			blankContact.displayContact(this.arrayListOfContacts.get(i));
 			System.out.println("\n\n----------------------------------------------------\n");
 		}
 	}
 
 	public int countContactsInBook() {
-		return this.currentAddressBook.size();
+		return this.arrayListOfContacts.size();
 	}
 
 	public void handleDuplicateContacts() {
-		int arraySize = this.currentAddressBook.size();
+		int arraySize = this.arrayListOfContacts.size();
 		ArrayList<String> contactListNames = new ArrayList<>(arraySize);
 		List<Contact> contactListWithoutDuplicates = new ArrayList<>();
 
 		System.out.println("***********************************Before Removing Duplicates***********************************");
 		this.displayBook();
-		contactListWithoutDuplicates = this.currentAddressBook.stream()
+		contactListWithoutDuplicates = this.arrayListOfContacts.stream()
 									   .distinct()
 									   .collect(Collectors.toList());
-		this.currentAddressBook = contactListWithoutDuplicates;
+		this.arrayListOfContacts = contactListWithoutDuplicates;
 		System.out.println("***********************************After Removing Duplicates***********************************");
 		this.displayBook();
 	}
@@ -56,12 +56,12 @@ public class AddressBook  implements IAddressBook{
 		System.out.printf("You are in %s :\n",this.currentAddressBookName);
 		System.out.println("Enter Details of the new Contact you want to add - ");
 		Contact newContact = createContact(sc);
-		this.currentAddressBook.add(newContact);
+		this.arrayListOfContacts.add(newContact);
 		addToFile(newContact);
 	}
 
 	public void addContactByPassingContact(Contact contactToAdd) {
-		this.currentAddressBook.add(contactToAdd);
+		this.arrayListOfContacts.add(contactToAdd);
 		addToFile(contactToAdd);
 	}
 
@@ -99,10 +99,10 @@ public class AddressBook  implements IAddressBook{
 		System.out.println("Please Enter Last Name of Contact to find :");
 		String lName = sc.next();
 		
-		for (int i = 0 ; i<currentAddressBook.size(); i++) {
+		for (int i = 0; i< arrayListOfContacts.size(); i++) {
 			
-			if(currentAddressBook.get(i).getFirstName().equals(fName)
-			   && currentAddressBook.get(i).getLastName().equals(lName)) {
+			if(arrayListOfContacts.get(i).getFirstName().equals(fName)
+			   && arrayListOfContacts.get(i).getLastName().equals(lName)) {
 				
 				System.out.printf("\nContact is at [%d] position in %s.\n", 
 						          i+1, this.currentAddressBookName);
@@ -128,7 +128,7 @@ public class AddressBook  implements IAddressBook{
 			System.out.println("Enter the updated Contact Details : ");
 
 			Contact updatedContact = createContact(sc);
-			book1.currentAddressBook.set(index, updatedContact);
+			book1.arrayListOfContacts.set(index, updatedContact);
 
 			System.out.println("Contact Details have been updated.");
 		}
@@ -141,7 +141,7 @@ public class AddressBook  implements IAddressBook{
 		
 		int index = book1.findContact(sc);
 		if(index != -999) {
-			book1.currentAddressBook.remove(index);
+			book1.arrayListOfContacts.remove(index);
 			System.out.println("Contact has been deleted.");
 		}
 	}
@@ -155,11 +155,11 @@ public class AddressBook  implements IAddressBook{
 				return contactFullName.compareTo(t1FullName);
 			}
 		};
-		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
-		sortedAddressBook = (ArrayList<Contact>) this.currentAddressBook.stream()
+		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.arrayListOfContacts.size());
+		sortedAddressBook = (ArrayList<Contact>) this.arrayListOfContacts.stream()
 																		.sorted(fullNameComparator)
 																		.collect(Collectors.toList());
-		this.currentAddressBook = sortedAddressBook;
+		this.arrayListOfContacts = sortedAddressBook;
 	}
 
 	public void sortAddressBookByContactCity(){
@@ -169,11 +169,11 @@ public class AddressBook  implements IAddressBook{
 				return contact.getCity().compareTo(t1.getCity());
 			}
 		};
-		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
-		sortedAddressBook = (ArrayList<Contact>) this.currentAddressBook.stream()
+		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.arrayListOfContacts.size());
+		sortedAddressBook = (ArrayList<Contact>) this.arrayListOfContacts.stream()
 				.sorted(cityComparator)
 				.collect(Collectors.toList());
-		this.currentAddressBook = sortedAddressBook;
+		this.arrayListOfContacts = sortedAddressBook;
 	}
 
 	public void sortAddressBookByContactState(){
@@ -183,11 +183,11 @@ public class AddressBook  implements IAddressBook{
 				return contact.getState().compareTo(t1.getState());
 			}
 		};
-		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
-		sortedAddressBook = (ArrayList<Contact>) this.currentAddressBook.stream()
+		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.arrayListOfContacts.size());
+		sortedAddressBook = (ArrayList<Contact>) this.arrayListOfContacts.stream()
 				.sorted(stateComparator)
 				.collect(Collectors.toList());
-		this.currentAddressBook = sortedAddressBook;
+		this.arrayListOfContacts = sortedAddressBook;
 	}
 
 	public void sortAddressBookByContactZipCode(){
@@ -197,11 +197,11 @@ public class AddressBook  implements IAddressBook{
 				return contact.getZipCode()- t1.getZipCode();
 			}
 		};
-		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.currentAddressBook.size());
-		sortedAddressBook = (ArrayList<Contact>) this.currentAddressBook.stream()
+		ArrayList<Contact> sortedAddressBook = new ArrayList<>(this.arrayListOfContacts.size());
+		sortedAddressBook = (ArrayList<Contact>) this.arrayListOfContacts.stream()
 				.sorted(zipCodeComparator)
 				.collect(Collectors.toList());
-		this.currentAddressBook = sortedAddressBook;
+		this.arrayListOfContacts = sortedAddressBook;
 	}
 
 	private void addToFile(Contact person) {

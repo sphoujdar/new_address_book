@@ -11,8 +11,6 @@ public class AddressBook  implements IAddressBook{
 	String currentAddressBookName;
 	public List<Contact> arrayListOfContacts = new ArrayList<>();
 
-	public AddressBook() {
-	}
 	public AddressBook(String currentAddressBookName) {
 		super();
 		this.currentAddressBookName = currentAddressBookName;
@@ -38,9 +36,7 @@ public class AddressBook  implements IAddressBook{
 	}
 
 	public void handleDuplicateContacts() {
-		int arraySize = this.arrayListOfContacts.size();
-		ArrayList<String> contactListNames = new ArrayList<>(arraySize);
-		List<Contact> contactListWithoutDuplicates = new ArrayList<>();
+		List<Contact> contactListWithoutDuplicates;
 
 		System.out.println("***********************************Before Removing Duplicates***********************************");
 		this.displayBook();

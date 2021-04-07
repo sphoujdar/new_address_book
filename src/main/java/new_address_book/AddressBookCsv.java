@@ -1,9 +1,7 @@
 package new_address_book;
-import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.*;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import java.io.IOException;
@@ -11,9 +9,9 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+
 import java.util.Iterator;
-import java.util.List;
+
 
 public class AddressBookCsv {
     public static final String fileName = "/home/phoujdar/eclipse-workspace/new_address_book/src/test/resources/contactFileCsv.csv";
